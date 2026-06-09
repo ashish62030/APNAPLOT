@@ -26,15 +26,32 @@ const PORT = 5000;
 connectDB();
 
 //middlewares
-const allowedOrigins = [
+const configuredOrigins = [
+  "http://localhost:5173",
+  "https://apnaplot.vercel.app",
   "https://apnaplot-frontend.vercel.app",
   process.env.CLIENT_URL,
-].filter(Boolean);
+  process.env.CLIENT_URLS,
+]
+  .flatMap((origin) => (origin ? origin.split(",") : []))
+  .map((origin) => origin.trim().replace(/\/$/, ""))
+  .filter(Boolean);
+
+const allowedOrigins = [...new Set(configuredOrigins)];
+
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+  const normalizedOrigin = origin.replace(/\/$/, "");
+  return (
+    allowedOrigins.includes(normalizedOrigin) ||
+    /^https:\/\/[^/]*apnaplot[^/]*\.vercel\.app$/.test(normalizedOrigin)
+  );
+};
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (isAllowedOrigin(origin)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
