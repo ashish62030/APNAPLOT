@@ -27,7 +27,8 @@ connectDB();
 
 //middlewares
 const allowedOrigins = [
-  "https://apnaplot-frontend.vercel.app/",
+  "https://apnaplot-frontend.vercel.app",
+  process.env.CLIENT_URL,
 ].filter(Boolean);
 
 app.use(
