@@ -27,7 +27,7 @@ connectDB();
 
 //middlewares
 const allowedOrigins = [
-  "http://localhost:5173",
+  "https://apnaplot-frontend.vercel.app/",
 ].filter(Boolean);
 
 app.use(
